@@ -47,7 +47,7 @@ function load<T>(key: string, fallback: T): T {
 
     const addProject = useCallback((name: string, description: string) => {
         const id = "p" + Math.random().toString(36). slice(2, 8);
-        setProjects((prev) => [...prev, {id, name, description}]);
+        setProjects((prev) => [...prev, {id, name, description, status: "not-started"}]);
     }, [setProjects]);
 
     const addTask = useCallback((projectId: string, title: string, status: TaskStatus = "not-started") => {

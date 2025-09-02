@@ -1,8 +1,8 @@
 import type {Project, Task} from "./types"
 
 export const initialProjects: Project[] = [
-    {id: "p1", name: "Website Redesign", description: "New brading + pages"},
-    {id: 'p2', name: "Mobile App", description: "Cross-platform tracker"},
+    {id: "p1", name: "Website Redesign", description: "New brading + pages", status: "in-progress"},
+    {id: 'p2', name: "Mobile App", description: "Cross-platform tracker", status: "not-started"},
 ]
 
 export const initialTasks: Task[] = [
