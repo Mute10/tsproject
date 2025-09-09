@@ -1,5 +1,5 @@
 export type TaskStatus = "not-started" | "in-progress" | "completed";
-export type ProjectStatus = "not-started" | "in-progress" | "completed";
+export type ProjectStatus = "not-started" | "in-progress" | "completed" | "archived" | "blocked";
 
 
 
@@ -36,6 +36,15 @@ export const TASK_STATUSES: TaskStatus[] = [
 
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
     "not-started": "Not started", "in-progress": "In progress", "completed": "Completed",
+    "archived": "Saved in the Archive", "blocked": "Project is now blocked"
+}
+
+export const PROJECT_STATUS_ORDER: Record<ProjectStatus, number> = {
+    "not-started": 0,
+    "in-progress" : 1,
+    "completed": 2,
+    "blocked": 0,
+    "archived": 1,
 }
 
 export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
@@ -44,11 +53,7 @@ export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
     "completed": "Completed"
 }
 
-export const PROJECT_STATUS_ORDER: Record<ProjectStatus, number> = {
-    "not-started": 0,
-    "in-progress" : 1,
-    "completed": 2,
-}
+
 
 export const TASK_STATUS_ORDER: Record<TaskStatus, number> = {
     "not-started": 0,
