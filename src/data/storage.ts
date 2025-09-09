@@ -39,3 +39,37 @@ export function ensureSeed() {
     export function setTasks(list: Task[]) {
         localStorage.setItem(TASKS_KEY, JSON.stringify(list))
     }
+
+    export function getProjectById(id: string): Project | undefined {
+        return getProjects().find(p => p.id === id);
+    }
+
+    export function updateProject(updated: Project) {
+        const list = getProjects().map(p => (p.id === updated.id ? updated : p))
+        setProjects(list);
+    }
+
+    export function upsertTask(updated: Task) {
+        const all = getTasks();
+        const idx = all.findIndex(t => t.id ===updated.id);
+        if (idx >= 0) all[idx] = updated;
+        else all.unshift(updated)
+        setTasks(all);
+    }
+
+    export function getTasksForProject(projectId: string): Task[] {
+        return getTasks().filter(t => t.projectId === projectId);
+    }
+
+    export function normalizeAll() {
+        setProjects(getProjects().map(p => ({ ...p, status: normalizeProjectStatus(p.status as string)})));
+        setTasks(getTasks().map(t => ({ ...t, status: normalizeTaskStatus(t.status as string)})));
+    }
+
+    export function deleteTask(taskId: string) {
+        const all = getTasks()
+        const next = all.filter(t => t.id !== taskId);
+        setTasks(next);
+    }
+
+    

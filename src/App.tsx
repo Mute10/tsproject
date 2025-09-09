@@ -6,6 +6,7 @@ import { ProjectProvider } from './ProjectContext.tsx';
 import { useContext } from "react";
 import {ProjectCtx} from "./ProjectContext"
 import ProjectsList from "./pages/ProjectsList.tsx";
+import ProjectList from "./components/ProjectsList.tsx"
 
 
 function NavInline() {
@@ -42,7 +43,8 @@ export default function App() {
         <Route path="/projects" element={<ProjectsList />} />
         <Route path="/projects/:id" element={<ProjectBoard />} />
         <Route path="/settings" element={<Settings />} />
-
+<Route path="/projects" element={<ProjectList />} />
+<Route path="/projects/:id" element={<ProjectBoard />} />
       </Routes>
     </div>
     </ProjectProvider>

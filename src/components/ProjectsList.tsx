@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from "react";
-import type { Project, ProjectStatus } from "../types";
+import type { Project } from "../types";
 import { ensureSeed, getProjects, setProjects } from "../data/storage";
 import ProjectCard from "./ProjectCard";
 import "./projects.css"
@@ -9,7 +9,7 @@ type SortKey = "updatedAt" | "createdAt" | "name" | "status";
 const uuid = () => (globalThis.crypto?.randomUUID?. () ?? Math.random().toString(36).slice(2));
 const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-export default function comProjectsList() {
+export default function ProjectsList() {
     const [query, setQuery] = useState("");
         const [sortBy, setSortBy] = useState<SortKey>("updatedAt");
     const [asc, setAsc] = useState(false);
@@ -27,7 +27,7 @@ export default function comProjectsList() {
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase()
-        let out = items.filter(p => !q || 
+        const out = items.filter(p => !q || 
             p.name.toLowerCase().includes(q) ||
             p.description?.toLowerCase().includes(q) ||
             p.tags?.some(t => t.toLowerCase().includes(q))

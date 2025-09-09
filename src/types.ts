@@ -35,7 +35,7 @@ export const TASK_STATUSES: TaskStatus[] = [
 ]
 
 export const PROJECT_STATUS_LABEL: Record<ProjectStatus, string> = {
-    "not-started": "Not_started", "in_progress": "In progress", "done": "Done",
+    "not-started": "Not started", "in-progress": "In progress", "completed": "Completed",
 }
 
 export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
