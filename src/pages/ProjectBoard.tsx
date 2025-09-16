@@ -4,12 +4,34 @@ import { ProjectCtx } from "../ProjectContext";
 import type { Ctx } from "../ProjectContext";
 import { PROJECT_STATUS_LABEL } from "../types";
 import type { CSSProperties, ReactNode } from "react";
-import type { ProjectStatus, TaskStatus } from "../types";
+import type { ProjectStatus } from "../types";
+import {TaskCard} from "./TaskCard";
 
 export default function ProjectBoard() {
   const { id } = useParams<{ id: string }>();
   const ctx = useContext(ProjectCtx) as Ctx;
   const project = id ? ctx.getProject(id) : undefined;
+
+  
+ const [nameDraft, setNameDraft] = useState("");
+ const [descDraft, setDescDraft] = useState("");
+ const [editingName, setEditingName] = useState(false);
+
+
+ useEffect(() => {
+if (!project) return;
+  setNameDraft(project.name ?? "");
+  setDescDraft(project.description ?? "")
+ }, [project])
+
+
+  const updatedAtDisplay = useMemo(() => {
+    if (!project) return "";
+    const d = new Date(project.updatedAt);
+    return isNaN(d.getTime()) ? project.updatedAt : d.toLocaleString();
+  }, [project]);
+
+  
 
   if (!id) return <Navigate to="/projects" replace />;
   if (!project) {
@@ -24,26 +46,11 @@ export default function ProjectBoard() {
     );
   }
 
-  // ✅ Hooks
- const [nameDraft, setNameDraft] = useState("");
- const [descDraft, setDescDraft] = useState("");
- const [editingName, setEditingName] = useState(false);
+ 
 
- useEffect(() => {
-  if (!project) return;
-  setNameDraft(project.name ?? "");
-  setDescDraft(project.description ?? "")
- }, [project])
 
-  
-
-  const updatedAtDisplay = useMemo(() => {
-    const d = new Date(project.updatedAt);
-    return isNaN(d.getTime()) ? project.updatedAt : d.toLocaleString();
-  }, [project.updatedAt]);
-
-  // ✅ Helpers
   function commitName() {
+    if (!project) return;
     const next = nameDraft.trim();
     if (next && next !== project.name) {
       ctx.updateProject(project.id, { name: next });
@@ -52,6 +59,7 @@ export default function ProjectBoard() {
     }
     setEditingName(false);
   }
+
 
   const onNameKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === "Enter") commitName();
@@ -89,7 +97,7 @@ export default function ProjectBoard() {
     fontFamily: "system-ui",
   };
 
-  // ✅ Main render
+
   return (
     <div style={shellStyle}>
       <header style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
@@ -124,8 +132,8 @@ export default function ProjectBoard() {
         </select>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={handleAddTask} style={btn}>+ New Task</button>
-          <Link to="/projects" style={{ ...btn, textDecoration: "none" }}>← Back to Projects</Link>
+          <button onClick={handleAddTask} style={{...btn, fontSize: "22px", fontFamily: "cursive"}}>+ New Task</button>
+          <Link to="/projects" style={{ ...btn, fontSize:"22px", fontFamily:"cursive" }}>← Back to Projects</Link>
         </div>
       </header>
 
@@ -137,52 +145,42 @@ onBlur={() => {
     ctx.updateProject(project.id, {description: next});
   }
 }}
-placeholder="Add a project description." style={{ width: 100, minHeight: 80,
-  marginBottom: 16,
-  padding: 8,
-  borderRadius: 5,
-  border: "1px solid #0b1220",
-  background: "#0b1220",
-  color: "#ffff",
-  font: "inherit",
+placeholder="Enter description here"
+  style={{
+    width: "100%",
+    maxWidth: "600px",
+    minHeight: 120,
+    marginBottom: 16,
+    padding: 8,
+    borderRadius: 5,
+    border: "2px solid blue",
+    background: "transparent",  
+    color: "#fff",
+    font: "inherit",
+    opacity: descDraft ? 1 : 0.6, 
+    resize: "vertical",
+    overflowY: "auto",
+  }}
+/>
 
-}}/>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
         <Column title={`Not started (${ns.length})`}>
           {ns.map((t) => (
-            <TaskRow
-              key={t.id}
-              title={t.title}
-              status={t.status}
-              onToggle={() => ctx.moveTask(t.id, t.status === "not-started" ? "in-progress" : "completed")}
-              onDelete={() => ctx.deleteTask(t.id)}
-            />
+            <TaskCard key={t.id} task={t}/>
           ))}
           {ns.length === 0 && <Empty />}
         </Column>
 
         <Column title={`In progress (${ip.length})`}>
           {ip.map((t) => (
-            <TaskRow
-              key={t.id}
-              title={t.title}
-              status={t.status}
-              onToggle={() => ctx.moveTask(t.id, t.status === "in-progress" ? "completed" : "not-started")}
-              onDelete={() => ctx.deleteTask(t.id)}
-            />
+            <TaskCard key={t.id} task={t}/>
           ))}
           {ip.length === 0 && <Empty />}
         </Column>
 
         <Column title={`Completed (${done.length})`}>
           {done.map((t) => (
-            <TaskRow
-              key={t.id}
-              title={t.title}
-              status={t.status}
-              onToggle={() => ctx.moveTask(t.id, "not-started")}
-              onDelete={() => ctx.deleteTask(t.id)}
-            />
+            <TaskCard key={t.id} task={t}/>
           ))}
           {done.length === 0 && <Empty />}
         </Column>
@@ -198,7 +196,7 @@ placeholder="Add a project description." style={{ width: 100, minHeight: 80,
   );
 }
 
-// --- UI helpers ---
+
 function Column({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section style={{ background: "#111827", borderRadius: 12, padding: 12 }}>
@@ -208,30 +206,10 @@ function Column({ title, children }: { title: string; children: ReactNode }) {
   );
 }
 
-function TaskRow({ title, status, onToggle, onDelete }: {
-  title: string;
-  status: TaskStatus;
-  onToggle: () => void;
-  onDelete: () => void;
-}) {
-  return (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "auto 1fr auto auto",
-      alignItems: "center",
-      gap: 8,
-      padding: "8px 10px",
-      marginBottom: 8,
-      borderRadius: 10,
-      background: "#0b1220",
-      border: "1px solid #1f2937",
-    }}>
-      <button onClick={onToggle} style={pill}>{status.replace("-", " ")}</button>
-      <span>{title}</span>
-      <button onClick={onDelete} style={icon} title="Delete">🗑️</button>
-    </div>
-  );
-}
+
+
+  
+
 
 function Empty() {
   return <div style={{ opacity: 0.6, fontStyle: "italic" }}>No tasks</div>;
@@ -247,18 +225,3 @@ const btn: CSSProperties = {
   cursor: "pointer",
 };
 
-const pill: CSSProperties = {
-  background: "#374151",
-  color: "#fff",
-  border: "none",
-  padding: "4px 8px",
-  borderRadius: 999,
-  cursor: "pointer",
-};
-
-const icon: CSSProperties = {
-  background: "transparent",
-  color: "#fff",
-  border: "none",
-  cursor: "pointer",
-};

@@ -58,7 +58,16 @@ export default function ProjectsList() {
                     {p.status && <div className="card-meta">Status: {p.status}</div>}
                     {p.owner && <div className="card-meta">Owner: {p.owner}</div>}
                     {p.description && <p className="card-desc">{p.description}</p>}
-                    <Link className="btn2" to={`/projects/${p.id}`}>Open Board</Link>
+                    <div className="card-actions">
+<Link className="btn2" to={`/projects/${p.id}`}>Open Board</Link>
+<button className="btn2 danger" onClick={() => {
+    if (confirm(`Delete project "${p.name}"? This can't be undone.`)) {
+    ctx?.deleteProject(p.id)}}}>
+    Close Board
+    </button>
+
+                    </div>
+                    
                 </li>
             ))}
         </ul>

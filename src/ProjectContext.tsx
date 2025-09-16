@@ -14,7 +14,7 @@ const nowISO = () => new Date().toISOString()
 export type Ctx = {
     projects: Project[];
     tasks: Task[];
-    addProject: (name: string, description: string) => void;
+    addProject: (name: string, description: string, id?: string) => void;
     addTask: (projectId: string, title: string, status?: TaskStatus) => void;
     moveTask: (taskId: string, status: TaskStatus) => void;
     deleteTask: (taskId: string) => void;
@@ -27,14 +27,13 @@ export type Ctx = {
     patch: Partial<Pick<Project, "name" | "status" | "description">>
 ) => void;
 touchProject: (projectId: string, ts?: string) => void;
+deleteProject: (projectId: string) => void;
+updateTaskTitle: (taskId: string, newTitle: string) => void;
 };
 
 
 
-
 export const ProjectCtx = createContext<Ctx | null>(null);
-
-
 // function helper for loading form localStorage or falling back to defaults
 function load<T>(key: string, fallback: T): T {
     try {
@@ -58,16 +57,21 @@ function load<T>(key: string, fallback: T): T {
     useEffect(() => localStorage.setItem(LS_Projects, JSON.stringify(projects)), [projects]);
     useEffect(() => localStorage.setItem(LS_Tasks, JSON.stringify(tasks)), [tasks]);
 
-    const addProject = useCallback((name: string, description: string) => {
-        const id = "p" + Math.random().toString(36).slice(2, 8);
-        const ts = nowISO();
-        setProjects((prev) => [...prev, {id, name, description, 
-            status: "not-started",
-        createdAt: ts,
-    updatedAt: ts,
-    } satisfies Project,
-    ]);
-         }, []);
+    const addProject = useCallback (
+        (name: string, description: string, id?: string) => {
+            const projectId = id ?? "p" + Math.random().toString(36).slice(2, 8);
+            const ts = nowISO();
+            setProjects((prev) => [
+                ...prev,
+                {
+                id: projectId, name, description,
+                status: "not-started",
+                createdAt: ts,
+                updatedAt: ts,
+            } satisfies Project,
+            ])
+        }, []
+    )
 
 
     const touchProject = useCallback((projectId: string, ts: string = nowISO()) => {
@@ -139,6 +143,12 @@ const updateProject = useCallback(
 [touchProject]
     );
 
+    const deleteProject = useCallback((projectId: string)=> {
+        setProjects(prev => prev.filter(p => p.id !== projectId));
+        setTasks(prev => prev.filter( t => t.projectId !== projectId))
+    }, []);
+
+    
     const getProject = useCallback (
         (id: string) => projects.find(p => p.id === id),
         [projects]
@@ -149,9 +159,19 @@ const updateProject = useCallback(
         [tasks]
     );
 
+const updateTaskTitle = useCallback((taskId: string, newTitle: string) => {
+    const ts = nowISO()
+    let projId: string | undefined;
+    setTasks(prev => prev.map(t => {
+        if (t.id !== taskId) return t;
+        projId = t.projectId;
+        return {...t, title: newTitle, updatedAt: ts};
+    }));
 
-
-
+    if (projId) {
+        touchProject(projId, ts)
+    }
+}, [touchProject]);
 
 
     // backup/restore
@@ -165,7 +185,7 @@ const updateProject = useCallback(
             setProjects(parsed.projects);
             setTasks(parsed.tasks);
         } else {
-            throw new Error("Invalid dats format")
+            throw new Error("Invalid data format")
         }
     }, []
     )
@@ -184,9 +204,12 @@ const updateProject = useCallback(
         importJSON,
         updateProject,
         touchProject,
+        deleteProject,
+        updateTaskTitle
+        
     }),
     [projects, tasks, addProject, addTask, moveTask, deleteTask, getProject, tasksForProject, exportJSON, importJSON, 
-        updateProject, touchProject,
+        updateProject, touchProject, deleteProject, updateTaskTitle
     ]
   );
   
