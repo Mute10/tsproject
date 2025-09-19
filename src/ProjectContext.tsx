@@ -1,5 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-
 import{createContext, useMemo, useState, useEffect, useCallback} from "react"
 import type {ReactNode} from "react"
 import type {Project, Task, TaskStatus} from "./types"
@@ -29,6 +28,7 @@ export type Ctx = {
 touchProject: (projectId: string, ts?: string) => void;
 deleteProject: (projectId: string) => void;
 updateTaskTitle: (taskId: string, newTitle: string) => void;
+updateTaskStatus: (taskId: string, status: Task["status"]) => void
 };
 
 
@@ -173,6 +173,13 @@ const updateTaskTitle = useCallback((taskId: string, newTitle: string) => {
     }
 }, [touchProject]);
 
+const updateTaskStatus = useCallback(
+    (taskId: string, status: Task["status"]) => {
+        setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status,
+            updatedAt: new Date().toISOString()} : t
+        ))
+    }, [setTasks]
+)
 
     // backup/restore
     const exportJSON = useCallback(() => {
@@ -205,11 +212,11 @@ const updateTaskTitle = useCallback((taskId: string, newTitle: string) => {
         updateProject,
         touchProject,
         deleteProject,
-        updateTaskTitle
-        
+        updateTaskTitle,
+        updateTaskStatus
     }),
     [projects, tasks, addProject, addTask, moveTask, deleteTask, getProject, tasksForProject, exportJSON, importJSON, 
-        updateProject, touchProject, deleteProject, updateTaskTitle
+        updateProject, touchProject, deleteProject, updateTaskTitle, updateTaskStatus
     ]
   );
   

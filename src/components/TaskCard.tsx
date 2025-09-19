@@ -1,4 +1,4 @@
-import type { Task } from "../types";
+import type { Task, TaskStatus } from "../types";
 import { useState, useContext } from "react";
 import { ProjectCtx } from "../ProjectContext";
 
@@ -14,10 +14,14 @@ export function TaskCard({ task }: TaskCardProps) {
 
   const icon: React.CSSProperties = {
   background: "transparent",
-  color: "#fff",
+  color: "#00FFFF",
   border: "none",
   cursor: "pointer",
+  fontSize: "1.4rem"
 };
+
+
+
 
 
   function commitEdit() {
@@ -28,8 +32,19 @@ export function TaskCard({ task }: TaskCardProps) {
     setIsEditing(false);
   }
 
+  function cycleStatus() {
+    const order: TaskStatus[] = ["not-started", "in-progress", "completed"]
+    const current = order.indexOf(task.status);
+    const next = order[(current + 1) % order.length]
+    ctx!.moveTask(task.id, next)
+}
+
+
+
   return (
-    <div className="task-card">
+    <div className="task-card" style={{display:"flex", flexDirection: "column",
+      gap: 8}}>
+
       {isEditing ? (
         <input
           value={draft}
@@ -39,16 +54,24 @@ export function TaskCard({ task }: TaskCardProps) {
             if (e.key === "Enter") commitEdit();
             if (e.key === "Escape") setIsEditing(false);
           }}
-          autoFocus
+          autoFocus style={{width: "80%", fontSize: "1rem", fontWeight: "bold",
+            border: "1px solid #457dd8ff", borderRadius: 5, padding: "4px 6px",
+            background: "#030304ff", color: "#ffff"
+           }}
         />
       ) : (
-        <h3 onDoubleClick={() => setIsEditing(true)}>{task.title}</h3>
+        <h3 onClick={() => setIsEditing(true)}>{task.title}</h3>
       )}
 
-      <p>Status: {task.status}</p>
 
-      <button style={icon} onClick={() => setIsEditing(true)}>✏️</button>
-      <button style={icon} onClick={() => ctx?.deleteTask(task.id)}>🗑️</button>
-    </div>
-  );
+      
+<div style={{ display: "flex", alignItems: "center", gap: 50,
+  justifyContent: "center", 
+ }}>
+  <button style={icon} onClick={() => setIsEditing(true)}>Edit</button>
+  <button style={icon} onClick={() => ctx!.deleteTask(task.id)}>Delete</button>
+   <button className="next-btn" style={{...icon}} onClick={cycleStatus}>Next</button>
+</div>
+</div>
+);
 }

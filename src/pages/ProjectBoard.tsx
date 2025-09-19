@@ -5,7 +5,7 @@ import type { Ctx } from "../ProjectContext";
 import { PROJECT_STATUS_LABEL } from "../types";
 import type { CSSProperties, ReactNode } from "react";
 import type { ProjectStatus } from "../types";
-import {TaskCard} from "./TaskCard";
+import {TaskCard} from "../components/TaskCard";
 
 export default function ProjectBoard() {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +47,6 @@ if (!project) return;
   }
 
  
-
 
   function commitName() {
     if (!project) return;
@@ -115,7 +114,8 @@ if (!project) return;
           ) : (
             <>
               {project.name || "Untitled Project"}
-              <button onClick={() => setEditingName(true)} style={btn} title="Rename">✏️</button>
+              <button onClick={() => setEditingName(true)} style={btn} 
+              title="Rename">Rename</button>
             </>
           )}
         </h2>
@@ -188,9 +188,20 @@ placeholder="Enter description here"
 
       <details style={{ marginTop: 16 }}>
         <summary>Debug</summary>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify({ id, project, tasksCount: tasks.length, ids: ctx.projects.map((p) => p.id) }, null, 2)}
+        <pre style={{ whiteSpace: "pre-wrap", fontSize:"12px", color:"lime"}}>
+          {JSON.stringify({ id, project, tasksCount: tasks.length, 
+            ids: ctx.projects.map((p) => p.id) }, null, 2)}
         </pre>
+        <ul style={{fontSize: "12px", color:"orange", marginTop: 8}}>
+          <li>{project?.name ? "Project name exists" : "Missing project name"}</li>
+          <li>{project?.status ? `Status: ${project.status}` : "No status yet"}</li>
+          <li>
+            {typeof tasks.length === "number" && tasks.length >= 0 ? `Tasks count: ${tasks.length}`
+            : "Invalid tasks count"}
+          </li>
+          <li>{project?.updatedAt ? "updatedAt present" : "updatedAt missing"}</li>
+          <li>{"apdatedAt" in (project || {}) ? "Typo found: `apdatedAt`" : "No typos in keys"}</li>
+        </ul>
       </details>
     </div>
   );
@@ -200,15 +211,12 @@ placeholder="Enter description here"
 function Column({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section style={{ background: "#111827", borderRadius: 12, padding: 12 }}>
-      <h3 style={{ marginTop: 0 }}>{title}</h3>
+      <h3 style={{ marginTop: 0, border: "5px solid grey"} }>{title}</h3>
       {children}
     </section>
   );
 }
 
-
-
-  
 
 
 function Empty() {
@@ -223,5 +231,7 @@ const btn: CSSProperties = {
   padding: "6px 10px",
   borderRadius: 8,
   cursor: "pointer",
+  fontSynthesis: "initial",
+  fontSize: "1rem",
 };
 

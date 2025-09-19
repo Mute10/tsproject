@@ -48,7 +48,7 @@ export default function ProjectsList() {
                 New Project
             </button>
               <p className="muted">
-            {summary.total} total · {summary.inProgress} in progress · {summary.notStarted} not started · {summary.completed} done
+            {summary.total} total · {summary.inProgress} in progress · {summary.notStarted} not started · {summary.completed} completed
         </p>
 
         <ul className="card-list">

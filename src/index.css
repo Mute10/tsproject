@@ -11,24 +11,46 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 a {
   font-weight: 500;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   color: rgb(96, 182, 248);
   text-decoration: inherit;
-  padding-right: 50px;
+  padding: 12px 17px;
+}
+
+.nav-link {
+  font-weight: 500;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  color: rgb(96, 182, 248);
+  padding: 12px 17px;
+  display: inline-block;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-link.active {
+  font-weight: bolder;
+  border-bottom-color: rgb(15, 241, 15);
 }
 
 a:hover {
   color: greenyellow;
+  text-transform: uppercase;
 }
 
+.ctrPrj {
+  color: rgb(96, 182, 248);
+}
+.ctrPrj:hover {
+  color: greenyellow;
+  text-transform: uppercase;
+}
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-  margin-right: 70px;
-  margin-top: 40px;
+  margin: 40px 0 20px;
 }
 
 .board {
@@ -171,4 +193,16 @@ box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
 }
 .btn2.danger:hover {
     background: #dc2626;
+}
+
+.next-btn {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: #00ffff; 
+  border: none;        
+  text-transform: uppercase;
+  padding: 6px 10px;
+  transition: color 0.2s ease;
 }

@@ -8,6 +8,20 @@ export default function Dashboard() {
   const { projects } = ctx;
 
   return (
+    <>
+    <div className="instructions">
+<h3>
+  To get started, click the **"Create Project"** button.  
+You’ll be taken to the Project Board, where you can add, remove, and organize tasks into categories.
+
+<p>- **Projects Page:** shows all the projects you’ve created in a simple list.  </p>
+<p>- **Project Board:** gives you a visual board to track and move tasks with the **"Next"** button. </p> 
+<p>- **Tracking:** the Projects page also keeps count of how many projects you’re managing.  </p>
+<p>- **Extras:** use the Settings page for additional features, and Debug mode to test or reset data.</p>
+  
+</h3>
+    </div>
+    
     <div className="dashboard">
       <h1>Dashboard</h1>
       <p>Here are your projects:</p>
@@ -25,13 +39,14 @@ export default function Dashboard() {
       </div>
       <footer>
         <button className="btn" onClick={() => {
-          localStorage.remoteItem("project_manager_v2");
+          localStorage.removeItem("project_manager_v2");
           localStorage.removeItem("project_manager_tasks_v2");
           location.reload()
         }}>
-          Reset Demo Data
+          Reset Data
         </button>
       </footer>
     </div>
+    </>
   );
 }
