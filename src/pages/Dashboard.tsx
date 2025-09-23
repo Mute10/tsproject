@@ -1,22 +1,35 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { ProjectCtx } from "../ProjectContext";
+import {useSettings} from "./SettingsContext";
+import {labels} from "../i18n";
+
 
 export default function Dashboard() {
   const ctx = useContext(ProjectCtx);
-  if (!ctx) return null; // safety check if provider is missing
+ 
+  const {settings} = useSettings()
+   if (!ctx) return null; // safety check if provider is missing
   const { projects } = ctx;
+
+
+    const t = labels[settings.language]
+
+  
+  
 
   return (
     <>
-    <div className="instructions">
+    <div className={settings.compactView ? "compact" : ""}>
+      <h1>{t.dashboard}</h1>
+      <h3>{t.projects}</h3>
 <h3>
-  To get started, click the **"Create Project"** button.  
+  To get started, click the "Create Project" button.  
 You’ll be taken to the Project Board, where you can add, remove, and organize tasks into categories.
 
-<p>- **Projects Page:** shows all the projects you’ve created in a simple list.  </p>
-<p>- **Project Board:** gives you a visual board to track and move tasks with the **"Next"** button. </p> 
-<p>- **Tracking:** the Projects page also keeps count of how many projects you’re managing.  </p>
+<p>- <b>Projects Page:</b> shows all the projects you’ve created in a simple list.  </p>
+<p>- <b>Project Board:</b> gives you a visual board to track and move tasks with the **"Next"** button. </p> 
+<p>- <b>Tracking:</b>the Projects page also keeps count of how many projects you’re managing.  </p>
 <p>- **Extras:** use the Settings page for additional features, and Debug mode to test or reset data.</p>
   
 </h3>

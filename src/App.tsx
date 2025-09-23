@@ -7,6 +7,7 @@ import { useContext } from "react";
 import {ProjectCtx} from "./ProjectContext"
 import ProjectsList from "./pages/ProjectsList.tsx";
 import { AnimatePresence, motion } from "framer-motion";
+import { SettingsProvider } from "./pages/SettingsContext.tsx";
 
 
 function NavInline() {
@@ -57,7 +58,7 @@ export default function App() {
 
   return (
     <ProjectProvider>
-    
+    <SettingsProvider>
     <div className="w-full">
 <NavInline />
 
@@ -77,8 +78,11 @@ export default function App() {
       </Routes>
       </motion.div>
       </AnimatePresence>
+      
     </div>
+    </SettingsProvider>
     </ProjectProvider>
+    
   );
 }
 

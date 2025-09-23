@@ -6,8 +6,11 @@ import { PROJECT_STATUS_LABEL } from "../types";
 import type { CSSProperties, ReactNode } from "react";
 import type { ProjectStatus } from "../types";
 import {TaskCard} from "../components/TaskCard";
+import {useSettings} from "./SettingsContext"
+
 
 export default function ProjectBoard() {
+  const {settings} = useSettings()
   const { id } = useParams<{ id: string }>();
   const ctx = useContext(ProjectCtx) as Ctx;
   const project = id ? ctx.getProject(id) : undefined;
@@ -23,6 +26,7 @@ if (!project) return;
   setNameDraft(project.name ?? "");
   setDescDraft(project.description ?? "")
  }, [project])
+
 
 
   const updatedAtDisplay = useMemo(() => {
@@ -98,7 +102,7 @@ if (!project) return;
 
 
   return (
-    <div style={shellStyle}>
+    <div style={shellStyle} className={settings.compactView ? "compact-board" : ""}>
       <header style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
         <h2 style={{ margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
           {editingName ? (
@@ -136,6 +140,7 @@ if (!project) return;
           <Link to="/projects" style={{ ...btn, fontSize:"22px", fontFamily:"cursive" }}>← Back to Projects</Link>
         </div>
       </header>
+
 
 <textarea value={descDraft} onChange={(e) => setDescDraft(e.target.value)}
 onBlur={() => {
@@ -186,7 +191,9 @@ placeholder="Enter description here"
         </Column>
       </div>
 
-      <details style={{ marginTop: 16 }}>
+{settings.debugEnabled && (
+
+<details style={{ marginTop: 15 }}>
         <summary>Debug</summary>
         <pre style={{ whiteSpace: "pre-wrap", fontSize:"12px", color:"lime"}}>
           {JSON.stringify({ id, project, tasksCount: tasks.length, 
@@ -203,9 +210,12 @@ placeholder="Enter description here"
           <li>{"apdatedAt" in (project || {}) ? "Typo found: `apdatedAt`" : "No typos in keys"}</li>
         </ul>
       </details>
-    </div>
-  );
+    
+          )}
+          </div>
+  )
 }
+      
 
 
 function Column({ title, children }: { title: string; children: ReactNode }) {
