@@ -56,7 +56,7 @@ You’ll be taken to the Project Board, where you can add, remove, and organize 
           localStorage.removeItem("project_manager_tasks_v2");
           location.reload()
         }}>
-          Reset Data
+         
         </button>
       </footer>
     </div>
