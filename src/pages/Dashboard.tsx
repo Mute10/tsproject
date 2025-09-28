@@ -37,7 +37,7 @@ You’ll be taken to the Project Board, where you can add, remove, and organize 
     
     <div className="dashboard">
       <h1>Dashboard</h1>
-      <p>Here are your projects:</p>
+      <p>Created Projects are listen here:</p>
 
       <div className="project-list">
         {projects.map((project) => (
