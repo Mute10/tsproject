@@ -50,7 +50,7 @@ export default function SettingsPage() {
             onChange={(e) =>
               setSettings((prev) => ({
                 ...prev,
-                language: e.target.value as "en" | "ja" | "es",
+                language: e.target.value as "en" | "ja" | "pl",
               }))
             }
           >
