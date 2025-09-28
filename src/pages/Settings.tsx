@@ -1,4 +1,7 @@
+
 import { useSettings, defaultSettings } from "./SettingsContext";
+
+
 
 export default function SettingsPage() {
   const { settings, setSettings } = useSettings();
@@ -36,19 +39,7 @@ export default function SettingsPage() {
         </label>
       </div>
 
-      {/* Compact View */}
-      <div style={{ margin: "16px 0" }}>
-        <label>
-          <input
-            type="checkbox"
-            checked={settings.compactView}
-            onChange={(e) =>
-              setSettings((prev) => ({ ...prev, compactView: e.target.checked }))
-            }
-          />
-          Compact View
-        </label>
-      </div>
+     
 
       {/* Language */}
       <div style={{ margin: "16px 0" }}>
@@ -70,20 +61,7 @@ export default function SettingsPage() {
         </label>
       </div>
 
-      {/* Show Avatar */}
-      <div style={{ margin: "16px 0" }}>
-        <label>
-          <input
-            type="checkbox"
-            checked={settings.showAvatar}
-            onChange={(e) =>
-              setSettings((prev) => ({ ...prev, showAvatar: e.target.checked }))
-            }
-          />
-          Show Avatar
-        </label>
-      </div>
-
+      
       {/* Restore Defaults */}
       <div style={{ margin: "16px 0" }}>
         <button className="btn" onClick={() => setSettings(defaultSettings)}>

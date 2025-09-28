@@ -3,11 +3,11 @@ import ProjectBoard from "./pages/ProjectBoard.tsx";
 import Settings from "./pages/Settings.tsx";
 import {Routes, Route, Navigate, useLocation, NavLink} from "react-router-dom"
 import { ProjectProvider } from './ProjectContext.tsx';
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {ProjectCtx} from "./ProjectContext"
 import ProjectsList from "./pages/ProjectsList.tsx";
 import { AnimatePresence, motion } from "framer-motion";
-import { SettingsProvider } from "./pages/SettingsContext.tsx";
+import { SettingsProvider, useSettings } from "./pages/SettingsContext.tsx";
 
 
 function NavInline() {
@@ -54,35 +54,49 @@ function NavInline() {
 
 
 export default function App() {
-  const location = useLocation()
-
   return (
     <ProjectProvider>
-    <SettingsProvider>
-    <div className="w-full">
-<NavInline />
-
-<AnimatePresence mode="wait">
-    <motion.div key={location.pathname}
-    initial={{scale: 1}}
-    animate={{scale: [1, 1.1, 1]}}
-    transition={{duration: 0.4}}>
- 
-      <Routes location={location}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />}/>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/projects" element={<ProjectsList />} />
-        <Route path="/projects/:id" element={<ProjectBoard />} />
-        <Route path="/settings" element={<Settings />} />
-
-      </Routes>
-      </motion.div>
-      </AnimatePresence>
-      
-    </div>
-    </SettingsProvider>
+      <SettingsProvider>
+        <AppContent /> {/* 👈 all UI goes here */}
+      </SettingsProvider>
     </ProjectProvider>
-    
   );
 }
+
+function AppContent() {
+  const location = useLocation();
+  const { settings } = useSettings(); // ✅ safe to use here
+
+  useEffect(() => {
+    if (settings.darkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+    }, [settings.darkMode])
+  
+  return (
+    <div className={`w-full ${settings.darkMode ? "dark" : ""}`}>
+      <NavInline />
+
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ scale: 1 }}
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 0.4 }}
+        >
+          <Routes location={location}>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/projects" element={<ProjectsList />} />
+            <Route path="/projects/:id" element={<ProjectBoard />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 

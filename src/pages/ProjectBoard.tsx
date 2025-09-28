@@ -102,7 +102,7 @@ if (!project) return;
 
 
   return (
-    <div style={shellStyle} className={settings.compactView ? "compact-board" : ""}>
+    <div style={shellStyle}>
       <header style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
         <h2 style={{ margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
           {editingName ? (
@@ -168,6 +168,7 @@ placeholder="Enter description here"
   }}
 />
 
+
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
         <Column title={`Not started (${ns.length})`}>
           {ns.map((t) => (
@@ -219,8 +220,10 @@ placeholder="Enter description here"
 
 
 function Column({ title, children }: { title: string; children: ReactNode }) {
+  const {settings} = useSettings()
+
   return (
-    <section style={{ background: "#111827", borderRadius: 12, padding: 12 }}>
+    <section style={{ background: "#111827", borderRadius: 12, padding: settings.compactView ? 6 : 12 }}>
       <h3 style={{ marginTop: 0, border: "5px solid grey"} }>{title}</h3>
       {children}
     </section>
