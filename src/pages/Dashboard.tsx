@@ -36,7 +36,7 @@ You’ll be taken to the Project Board, where you can add, remove, and organize 
     </div>
     
     <div className="dashboard">
-      <h1>Dashboard</h1>
+    
       <p>Created Projects are listen here:</p>
 
       <div className="project-list">
