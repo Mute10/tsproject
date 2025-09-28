@@ -51,13 +51,9 @@ You’ll be taken to the Project Board, where you can add, remove, and organize 
         ))}
       </div>
       <footer>
-        <button className="btn" onClick={() => {
-          localStorage.removeItem("project_manager_v2");
-          localStorage.removeItem("project_manager_tasks_v2");
-          location.reload()
-        }}>
-         
-        </button>
+       
+       © 2025 Mute10. This is a production-level project built with TypeScript and React. 
+
       </footer>
     </div>
     </>
