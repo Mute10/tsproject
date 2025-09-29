@@ -56,7 +56,7 @@ export default function SettingsPage() {
           >
             <option value="en">English</option>
             <option value="ja">日本語</option>
-            <option value="es">Español</option>
+            <option value="pl">Polish</option>
           </select>
         </label>
       </div>

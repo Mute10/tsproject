@@ -236,7 +236,7 @@ function Empty() {
   return <div style={{ opacity: 0.6, fontStyle: "italic" }}>No tasks</div>;
 }
 
-// --- styles ---
+
 const btn: CSSProperties = {
   background: "#1f2937",
   color: "#fff",
